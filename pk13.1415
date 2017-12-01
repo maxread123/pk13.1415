@@ -1,0 +1,220 @@
+Definirajte funkciju "filtriraj" koja kao argumente prima listu stringova i  jedno slovo. Funkcija treba napraviti novu listu "filtrirani" koja će kao elemente sadržavati one elemente iz proslijeđene liste u kojima se proslijeđeno slovo pojavljuje barem dva puta i to u obliku rijec:brojPojavljivanjaSlova. Napomena: sve elemente liste prije filtriranja prebacite u lowercase. Nakon toga dobivenu listu spojite u jedan veliki string tako da između elemenata liste stoji ';' i vratite taj string kao rezultat funkcije. U main dijelu programa napravite listu sa barem 10 riječi i pozovite funkciju filtriraj kojoj ćete proslijediti tu listu i neko slovo i ispišite dobiveni rezultat. 
+ 
+def filtriraj(lista, slovo): 
+    novaLista = [] 
+    for el in lista: 
+        el = el.lower() 
+        brojac = 0 
+        for s in el: 
+            if s == slovo: 
+                brojac += 1 
+        if brojac>=2: 
+            novaLista.append(el+':'+str(brojac)) 
+    string = ";".join(novaLista) 
+    return string 
+     
+if __name__ == "__main__": 
+    rijeci = ['banana', 'predavanja', 'automobil', 'cvjetača', 'prozor', 'sat', 'poskupljenje', 'čarapa', 'cipele', 'ananas'] 
+    print(filtriraj(rijeci,'a')) 
+ 
+    Koristeći biblioteku random, napravite listu "brojevi" od 30 elemenata koja sadrži slučajno generirane brojeve iz intervala [1000, 100000]. Zatim tražite od korisnika da unese prirodan broj između 1 i 10 kojeg ćete spremiti u varijablu "granica". Koristeći list comprehension od liste "brojevi" napravite novu listu "filtrirani" koja će sadržavati samo one elemente iz liste "brojevi" čija je aritmetička sredina znamenki veća od broja "granica". Nakon toga, definirajte rječnik "vrijednosti" koji će kao ključeve sadržavati aritmetičke sredine elementata iz liste "filtrirani", a kao vrijednosti liste  brojeva koji imaju te vrijednosti aritmetičke sredine znamenki. Ispišite dobivenu listu "filtrirani" i rječnik "vrijednosti 
+ 
+import random 
+ 
+def arSred(broj): 
+    suma = 0 
+    brojac = 0 
+    while broj>0: 
+        suma += broj%10 
+        brojac += 1 
+        broj = broj//10 
+    return suma/brojac 
+     
+ 
+brojevi = [] 
+ 
+for i in range(30): 
+    brojevi.append(random.randint(1000,100000)) 
+#brojevi = [5555, 55555, 66666, 34254, 67856, 6666] 
+print(brojevi) 
+ 
+granica = int(input("Unesite prirodan broj: ")) 
+ 
+filtrirani = [x for x in brojevi if arSred(x)>granica] 
+print(filtrirani) 
+ 
+vrijednosti = {} 
+ 
+for el in filtrirani: 
+    if arSred(el) not in vrijednosti: 
+        vrijednosti[arSred(el)] = [] 
+    vrijednosti[arSred(el)].append(el) 
+     
+print(vrijednosti) 
+ 
+U fileu reprezentacija.txt se nalazi popis igrača u Hrvatskoj rukometnoj reprezentaciji. Učitajte podatke iz tog filea i spremite ih u rječnik "igraci" na sljedeći način: ključ je ime i prezime određenog igrača, a vrijednost je uređena četvorka koja na prvom mjestu ima poziciju igrača, na drugom mjestu visinu, na trećem težinu i na četvrtom godine igrača. U fileovima postava1.txt i postava2.txt se nalazi po 7 imena igrača. Vaš zadatak je učitati imena igrača iz svakog filea i provjeriti mogu li  nabrojani igrači činiti prvu postavu. Da bi igrači mogli činiti prvu postavu,  među njima mora biti točno jedan vratar, točno jedan pivot, dva krila i tri  vanjska igrača. Ukoliko igrači iz pojedinog filea mogu činiti prvu postavu, na kraj tog filea treba nadopisati sljedeća dva retka: Prosječna visina igrača u postavi: (visina - 2 decimale) Prosječan broj godina igrača u postavi: (br.god - 2 decimale) Ukoliko igrači iz pojedinog filea ne mogu činiti prvu postavu, u taj file na kraj treba napisati poruku: Nabrojani igrači ne mogu činiti prvu postavu. 
+ 
+file_igraci = open('reprezentacija.txt','r') 
+igraci = {} 
+ 
+for line in file_igraci: 
+    pom_lista = line.rstrip().split(';') 
+    igraci[pom_lista[0]]=tuple(pom_lista[1:]) 
+     
+#print(igraci) 
+file_igraci.close() 
+ 
+postava = {'vratar':0, 'vanjski':0, 'pivot':0, 'krilo':0} 
+lista_postava = [] 
+file_p1 = open('postava1.txt','r') 
+for line in file_p1: 
+    lista_postava.append(line.rstrip()) 
+file_p1.close() 
+ 
+#print(lista_postava) 
+for igrac in lista_postava: 
+    postava[igraci[igrac][0]] +=1 
+         
+#print(postava) 
+file_p1 = open('postava1.txt','a') 
+file_p1.write('\n') 
+file_p1.write('\n') 
+if postava['vratar']==1 and postava['vanjski']==3 and postava['krilo']==2 and postava['pivot']==1: 
+    prosjekGodine = 0 
+    prosjekVisina = 0 
+    for i in lista_postava: 
+        prosjekGodine += int(igraci[i][3]) 
+        prosjekVisina += int(igraci[i][1]) 
+    prosjekGodine = prosjekGodine/7 
+    prosjekVisina = prosjekVisina/7 
+    file_p1.write("Prosječna visina igrača u postavi: %.2f"%prosjekVisina) 
+    file_p1.write("\n") 
+    file_p1.write("Prosječan broj godina igrača u postavi: %.2f"%prosjekGodine) 
+else: 
+    file_p1.write("Nabrojani igrači ne mogu činiti prvu postavu.") 
+file_p1.close() 
+ 
+postava = {'vratar':0, 'vanjski':0, 'pivot':0, 'krilo':0} 
+lista_postava = [] 
+file_p2 = open('postava2.txt','r') 
+for line in file_p2: 
+    lista_postava.append(line.rstrip()) 
+file_p2.close() 
+ 
+#print(lista_postava) 
+for igrac in lista_postava: 
+    postava[igraci[igrac][0]] +=1 
+         
+#print(postava) 
+file_p2 = open('postava2.txt','a') 
+file_p2.write('\n') 
+file_p2.write('\n') 
+if postava['vratar']==1 and postava['vanjski']==3 and postava['krilo']==2 and postava['pivot']==1: 
+    prosjekGodine = 0 
+    prosjekVisina = 0 
+    for i in lista_postava: 
+        prosjekGodine += int(igraci[i][3]) 
+        prosjekVisina += int(igraci[i][1]) 
+    prosjekGodine = prosjekGodine/7 
+    prosjekVisina = prosjekVisina/7 
+    file_p2.write("Prosječna visina igrača u postavi: %.2f"%prosjekVisina) 
+    file_p2.write("\n") 
+    file_p2.write("Prosječan broj godina igrača u postavi: %.2f"%prosjekGodine) 
+else: 
+    file_p2.write("Nabrojani igrači ne mogu činiti prvu postavu.") 
+file_p2.close() 
+ 
+Napišite klasu Blagajna koja će kao atribute imati 10 varijabli, jednu koja će predstavljati broj kovanica od 1kn, jednu koja će predstavljati broj kovanica od 2kn, treća će predstavljati broj kovanica od 5kn, a sljedećih 7 će redom  predstavljati količinu novčanica od 10kn, 20kn, 50kn, 100kn, 200kn, 500kn i 1000kn. Definirajte metodu stanje() koja će vratiti ukupnu trenutnu količinu novca u blagajni.  Predefinirajte metodu __eq__ tako da vrati True ako dvije blagajne sadrže jednaku količinu novca. Predefinirajte metodu __str__ tako da print(blagajna) ispiše količinu svih apoena u blagajni. Definirajte metodu ostatak() koja kao argument prima neki iznos novca, zatim  izračuna koliko najmanje novčanica treba da bi se taj iznos vratio. Ukoliko u blagajni ima dovoljno pojedinih novčanica i kovanica da se taj iznos vrati, treba oduzeti te kovanice i novčanice iz blagajne i ispisati novo stanje u blagajni, a ako neke novčanice ili kovanice nema dovoljno da bi se izvratio dani ostatak, treba ispisati odgovarajuću poruku. 
+ 
+class Blagajna: 
+    def __init__(self, kn1, kn2, kn5, kn10, kn20, kn50, kn100, kn200, kn500, kn1000): 
+        self.kn1 = kn1 
+        self.kn2 = kn2 
+        self.kn5 = kn5 
+        self.kn10 = kn10 
+        self.kn20 = kn20 
+        self.kn50 = kn50 
+        self.kn100 = kn100 
+        self.kn200 = kn200 
+        self.kn500 = kn500 
+        self.kn1000 = kn1000 
+         
+    def stanje(self): 
+        return self.kn1 + 2*self.kn2 + 5*self.kn5 + 10*self.kn10 + 20*self.kn20 + 50*self.kn50 + \ 
+            100*self.kn100 + 200*self.kn200 + 500*self.kn500 + 1000*self.kn1000 
+             
+    def __eq__(self, b2): 
+        return self.stanje() == b2.stanje() 
+         
+    def __str__(self): 
+        s = "Blagajna: \n" 
+        s += "1kn: " 
+        s += str(self.kn1) 
+        s += ", " 
+        s += "2kn: " 
+        s += str(self.kn2) 
+        s += ", " 
+        s += "5kn: " 
+        s += str(self.kn5) 
+        s += ", " 
+        s += "10kn: " 
+        s += str(self.kn10) 
+        s += ", " 
+        s += "20kn: " 
+        s += str(self.kn20) 
+        s += ", " 
+        s += "50kn: " 
+        s += str(self.kn50) 
+        s += ", " 
+        s += "100kn: " 
+        s += str(self.kn100) 
+        s += ", " 
+        s += "200kn: " 
+        s += str(self.kn200) 
+        s += ", " 
+        s += "500kn: " 
+        s += str(self.kn500) 
+        s += ", " 
+        s += "1000kn: " 
+        s += str(self.kn1000) 
+        s += "\n" 
+        return s 
+         
+    def ostatak(self, iznos): 
+        l = [1000,500,200,100,50,20,10,5,2,1] 
+        d = {1:0, 2:0, 5:0, 10:0, 20:0, 50:0, 100:0, 200:0, 500:0, 1000:0} 
+        for a in l: 
+            while iznos - a >= 0: 
+                iznos = iznos - a 
+                d[a] = d.get(a,0)+1 
+        lista = list(d.items()) 
+        lista.sort() 
+        if lista[0][1]<=self.kn1 and lista[1][1]<=self.kn2 and lista[2][1]<=self.kn5 \ 
+        and lista[3][1]<=self.kn10 and lista[4][1]<=self.kn20 and lista[5][1]<=self.kn50\ 
+        and lista[6][1]<=self.kn100 and lista[7][1]<=self.kn200 and lista[8][1]<=self.kn500\ 
+        and lista[9][1]<=self.kn1000: 
+            self.kn1 -= lista[0][1] 
+            self.kn2 -= lista[1][1] 
+            self.kn5 -= lista[2][1] 
+            self.kn10 -= lista[3][1] 
+            self.kn20 -= lista[4][1] 
+            self.kn50 -= lista[5][1] 
+            self.kn100 -= lista[6][1] 
+            self.kn200 -= lista[7][1] 
+            self.kn500 -= lista[8][1] 
+            self.kn1000 -= lista[9][1] 
+            print("Novo stanje u blagajni je %d kn."%self.stanje()) 
+        else: 
+            print("U blagajni nema dovoljno određenih novčanica da bi se vratio željeni ostatak.") 
+             
+                 
+         
+if __name__ == "__main__": 
+    b1 = Blagajna(10, 5, 2, 3, 5, 2, 5, 4, 1, 1) 
+    b2 = Blagajna(12, 4, 4, 4, 4, 2, 5, 4, 1, 1) 
+    print(b1.stanje()) 
+    print(b1==b2) 
+    print(b1)   
+    b1.ostatak(579) 
+    b2.ostatak(3541) 
+    print(b1) 
